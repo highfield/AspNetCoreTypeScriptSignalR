@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreTypeScriptSignalR.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,10 @@ namespace AspNetCoreTypeScriptSignalR
             });
 
 
+            services.AddSignalR()
+                .AddMessagePackProtocol()
+                ;
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -52,6 +57,11 @@ namespace AspNetCoreTypeScriptSignalR
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseSignalR(configure =>
+            {
+                configure.MapHub<MyHub>("/hub");
+            });
 
             app.UseMvc(routes =>
             {
